@@ -1,0 +1,41 @@
+/ Crear un identificador único para la notificación
+int notificationId = 1;
+
+// Crear el Intent para la acción "Ver mi Perfil"
+Intent verPerfilIntent = new Intent(Intent.ACTION_MAIN);
+verPerfilIntent.addCategory(Intent.CATEGORY_HOME);
+verPerfilIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+// Crear el PendingIntent para la acción "Ver mi Perfil"
+PendingIntent verPerfilPendingIntent = PendingIntent.getActivity(context, 0, verPerfilIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+// Crear el Intent para la acción "Dar Follow/Unfollow"
+Intent followUnfollowIntent = new Intent(context, TuActividad.class); // Reemplaza "TuActividad" con la clase correspondiente a tu actividad
+followUnfollowIntent.setAction("follow_unfollow_action"); // Define una acción personalizada para distinguir las acciones
+followUnfollowIntent.putExtra("user_id", userId); // Puedes incluir datos adicionales en el Intent si es necesario
+
+// Crear el PendingIntent para la acción "Dar Follow/Unfollow"
+PendingIntent followUnfollowPendingIntent = PendingIntent.getActivity(context, 0, followUnfollowIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+// Crear el Intent para la acción "Ver Usuario"
+Intent verUsuarioIntent = new Intent(context, TuActividad.class); // Reemplaza "TuActividad" con la clase correspondiente a tu actividad
+verUsuarioIntent.setAction("ver_usuario_action"); // Define una acción personalizada para distinguir las acciones
+verUsuarioIntent.putExtra("user_id", userId); // Puedes incluir datos adicionales en el Intent si es necesario
+
+// Crear el PendingIntent para la acción "Ver Usuario"
+PendingIntent verUsuarioPendingIntent = PendingIntent.getActivity(context, 0, verUsuarioIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+// Construir la notificación
+NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle("Nueva interacción en tu foto")
+        .setContentText("Alguien ha raiteado tu foto")
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .addAction(R.drawable.ic_ver_perfil, "Ver mi Perfil", verPerfilPendingIntent)
+        .addAction(R.drawable.ic_follow_unfollow, "Dar Follow/Unfollow", followUnfollowPendingIntent)
+        .addAction(R.drawable.ic_ver_usuario, "Ver Usuario", verUsuarioPendingIntent)
+        .setAutoCancel(true);
+
+// Mostrar la notificación
+NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+notificationManager.notify(notificationId, builder.build());
